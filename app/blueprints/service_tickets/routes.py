@@ -9,21 +9,25 @@ from app.utils.auth import token_required
 @service_tickets_bp.route('', methods=["POST"])
 @token_required
 def create_service_ticket():
-    customer_id = request.user_id
-    customer = db.session.get(Customers, customer_id)
-    if not customer:
-        return jsonify({"error" : f"Customer with id: {customer_id} not found."}), 404
-    try:
-        data = service_ticket_schema.load(request.json)
-    except ValidationError as e:
-        return jsonify({"error message" : e.messages}), 400
-    print(data)
+    user_role = request.user_role
+    if user_role == "customer":
+        customer_id = request.user_id
+        customer = db.session.get(Customers, customer_id)
+        if not customer:
+            return jsonify({"error" : f"Customer with id: {customer_id} not found."}), 404
+        try:
+            data = service_ticket_schema.load(request.json)
+        except ValidationError as e:
+            return jsonify({"error message" : e.messages}), 400
+        print(data)
 
-    new_service_ticket = Service_tickets(**data,customer=customer)
-    db.session.add(new_service_ticket)
-    customer.service_tickets.append(new_service_ticket)
-    db.session.commit()
-    return service_ticket_schema.jsonify(new_service_ticket), 201
+        new_service_ticket = Service_tickets(**data,customer=customer)
+        db.session.add(new_service_ticket)
+        customer.service_tickets.append(new_service_ticket)
+        db.session.commit()
+        return service_ticket_schema.jsonify(new_service_ticket), 201
+    else:
+        return jsonify({"message" : f"{user_role} is not allowed."})
 
 @service_tickets_bp.route('', methods=["GET"])
 def read_service_tickets():
@@ -66,6 +70,7 @@ def read_service_ticket_mechanics(service_ticket_id):
     if not service_ticket:
         return jsonify({"error" : f"Service_ticket with id: {service_ticket_id} not found."}), 404
     return mechanics_schema.jsonify(service_ticket.mechanics)
+    
 
 @service_tickets_bp.route('/<int:service_ticket_id>/assign-mechanic/<int:mechanic_id>', methods=["PUT"])
 def add_mechanic_to_service_ticket(service_ticket_id,mechanic_id):

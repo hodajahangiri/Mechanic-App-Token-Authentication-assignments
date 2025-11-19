@@ -16,7 +16,7 @@ def login():
         return jsonify({"error message" : e.messages}), 400
     mechanic = db.session.query(Mechanics).where(Mechanics.email == credential_data["email"]).first()
     if mechanic and check_password_hash(mechanic.password, credential_data["password"]):
-        customer_token = encode_token(mechanic.id)
+        customer_token = encode_token(mechanic.id, "mechanic")
         response = {
             "message" : f"Successfully logged in. Welcome {mechanic.first_name}",
             "token" : customer_token
@@ -39,7 +39,7 @@ def create_mechanic():
     new_mechanic = Mechanics(**data)
     db.session.add(new_mechanic)
     db.session.commit()
-    new_mechanic_token = encode_token(new_mechanic.id)
+    new_mechanic_token = encode_token(new_mechanic.id, "mechanic")
     response = {"mechanic_data" : data,
                 "token" : new_mechanic_token}
     return jsonify(response), 201
@@ -52,49 +52,66 @@ def read_mechanics():
 @mechanics_bp.route('/profile', methods=["GET"])
 @token_required
 def read_mechanic():
-    mechanic_id = request.user_id
-    mechanic = db.session.get(Mechanics, mechanic_id)
-    if not mechanic:
-        return jsonify({"error" : f"Mechanic with id: {mechanic_id} not found."}), 404
-    return mechanic_schema.jsonify(mechanic), 200
+    user_role = request.user_role
+    if user_role == "mechanic":
+        mechanic_id = request.user_id
+        mechanic = db.session.get(Mechanics, mechanic_id)
+        if not mechanic:
+            return jsonify({"error" : f"Mechanic with id: {mechanic_id} not found."}), 404
+        return mechanic_schema.jsonify(mechanic), 200
+    else:
+        return jsonify({"message" : f"{user_role} is not allowed."})
 
 @mechanics_bp.route('', methods=["DELETE"])
 @token_required
 def delete_mechanic():
-    mechanic_id = request.user_id
-    mechanic = db.session.get(Mechanics, mechanic_id)
-    if not mechanic:
-        return jsonify({"error" : f"Mechanic with id: {mechanic_id} not found."}), 404
-    db.session.delete(mechanic)
-    db.session.commit()
-    return jsonify({"message" : f"Successfully deleted mechanic with id: {mechanic_id}"}), 200
-   
+    user_role = request.user_role
+    if user_role == "mechanic":
+        mechanic_id = request.user_id
+        mechanic = db.session.get(Mechanics, mechanic_id)
+        if not mechanic:
+            return jsonify({"error" : f"Mechanic with id: {mechanic_id} not found."}), 404
+        db.session.delete(mechanic)
+        db.session.commit()
+        return jsonify({"message" : f"Successfully deleted mechanic with id: {mechanic_id}"}), 200
+    else:
+        return jsonify({"message" : f"{user_role} is not allowed."})
+    
+
 @mechanics_bp.route('', methods=["PUT"])
 @token_required
 def update_mechanic():
-    mechanic_id = request.user_id
-    mechanic = db.session.get(Mechanics, mechanic_id)
-    if not mechanic:
-       return jsonify({"error" : f"Mechanic with id: {mechanic_id} not found."}), 404
-    try:
-        mechanic_data = mechanic_schema.load(request.json)
-    except ValidationError as e:
-        return jsonify({"error message" : e.messages}), 400
-    # Check the email Mechanic wants to update not be taken with another mechanic
-    existing_email = db.session.query(Mechanics).where(Mechanics.email == mechanic_data["email"], Mechanics.id != mechanic_id).first()
-    if existing_email:
-        return jsonify({"error" : f"{mechanic_data["email"]} is already taken with another mechanic."}), 400
-    mechanic_data["password"] = generate_password_hash(mechanic_data["password"])
-    for key, value in mechanic_data.items():
-        setattr(mechanic, key, value)
-    db.session.commit()
-    return jsonify({"message" : f"Successfully mechanic with id: {mechanic_id} updated."}), 200
-
+    user_role = request.user_role
+    if user_role == "mechanic":
+        mechanic_id = request.user_id
+        mechanic = db.session.get(Mechanics, mechanic_id)
+        if not mechanic:
+            return jsonify({"error" : f"Mechanic with id: {mechanic_id} not found."}), 404
+        try:
+            mechanic_data = mechanic_schema.load(request.json)
+        except ValidationError as e:
+            return jsonify({"error message" : e.messages}), 400
+        # Check the email Mechanic wants to update not be taken with another mechanic
+        existing_email = db.session.query(Mechanics).where(Mechanics.email == mechanic_data["email"], Mechanics.id != mechanic_id).first()
+        if existing_email:
+            return jsonify({"error" : f"{mechanic_data["email"]} is already taken with another mechanic."}), 400
+        mechanic_data["password"] = generate_password_hash(mechanic_data["password"])
+        for key, value in mechanic_data.items():
+            setattr(mechanic, key, value)
+        db.session.commit()
+        return jsonify({"message" : f"Successfully mechanic with id: {mechanic_id} updated."}), 200
+    else:
+        return jsonify({"message" : f"{user_role} is not allowed."})
+    
 @mechanics_bp.route('/service_tickets',methods=["GET"])
 @token_required
 def read_mechanic_service_tickets():
-    mechanic_id = request.user_id
-    mechanic = db.session.get(Mechanics,mechanic_id)
-    if not mechanic:
-        return jsonify({"error" : f"Mechanic with id: {mechanic_id} not found."}), 404
-    return service_tickets_schema.jsonify(mechanic.tickets), 200
+    user_role = request.user_role
+    if user_role == "mechanic":
+        mechanic_id = request.user_id
+        mechanic = db.session.get(Mechanics,mechanic_id)
+        if not mechanic:
+            return jsonify({"error" : f"Mechanic with id: {mechanic_id} not found."}), 404
+        return service_tickets_schema.jsonify(mechanic.tickets), 200
+    else:
+        return jsonify({"message" : f"{user_role} is not allowed."})
