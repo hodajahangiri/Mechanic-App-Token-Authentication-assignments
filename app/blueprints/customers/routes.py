@@ -11,11 +11,11 @@ from app.utils.auth import encode_token
 @customers_bp.route('/login', methods=['POST'])
 def login():
     try:
-        credential_date = customer_login_schema.load(request.json)
+        credential_data = customer_login_schema.load(request.json)
     except ValidationError as e:
         return jsonify({"error message" : e.messages}), 400
-    customer = db.session.query(Customers).where(Customers.email == credential_date["email"]).first()
-    if customer and check_password_hash(customer.password, credential_date["password"]):
+    customer = db.session.query(Customers).where(Customers.email == credential_data["email"]).first()
+    if customer and check_password_hash(customer.password, credential_data["password"]):
         customer_token = encode_token(customer.id)
         response = {
             "message" : f"Successfully logged in. Welcome {customer.first_name}",

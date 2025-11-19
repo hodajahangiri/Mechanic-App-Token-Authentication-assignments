@@ -1,10 +1,29 @@
 from app.blueprints.mechanics import mechanics_bp
 from app.models import Mechanics, db
-from .schemas import mechanic_schema, mechanics_schema
+from .schemas import mechanic_schema, mechanics_schema, mechanic_login_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
 from app.blueprints.service_tickets.schemas import service_tickets_schema
 from werkzeug.security import generate_password_hash, check_password_hash
+from app.utils.auth import encode_token
+
+#LOGIN ROUTE
+@mechanics_bp.route('/login', methods=['POST'])
+def login():
+    try:
+        credential_data = mechanic_login_schema.load(request.json)
+    except ValidationError as e:
+        return jsonify({"error message" : e.messages}), 400
+    mechanic = db.session.query(Mechanics).where(Mechanics.email == credential_data["email"]).first()
+    if mechanic and check_password_hash(mechanic.password, credential_data["password"]):
+        customer_token = encode_token(mechanic.id)
+        response = {
+            "message" : f"Successfully logged in. Welcome {mechanic.first_name}",
+            "token" : customer_token
+        }
+        return jsonify(response)
+    else:
+        return jsonify({"error message" : "Invalid email or password."}), 400
 
 @mechanics_bp.route('', methods=["POST"])
 def create_mechanic():
@@ -20,7 +39,10 @@ def create_mechanic():
     new_mechanic = Mechanics(**data)
     db.session.add(new_mechanic)
     db.session.commit()
-    return mechanic_schema.jsonify(new_mechanic), 201
+    new_mechanic_token = encode_token(new_mechanic.id)
+    response = {"mechanic_data" : data,
+                "token" : new_mechanic_token}
+    return jsonify(response), 201
 
 @mechanics_bp.route('', methods=["GET"])
 def read_mechanics():
