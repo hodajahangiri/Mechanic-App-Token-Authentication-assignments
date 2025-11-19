@@ -4,6 +4,7 @@ from .schemas import customer_schema, customers_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
 from app.blueprints.service_tickets.schemas import service_tickets_schema
+from werkzeug.security import generate_password_hash, check_password_hash 
 
 @customers_bp.route('', methods=["POST"])
 def create_customer():
@@ -15,6 +16,7 @@ def create_customer():
     exist_customer = db.session.query(Customers).where(Customers.email == data["email"]).first()
     if exist_customer:
         return jsonify({"error" : f"{data["email"]} is already associated with an account."}), 400
+    data["password"] = generate_password_hash(data["password"])
     new_customer = Customers(**data)
     db.session.add(new_customer)
     db.session.commit()
@@ -58,6 +60,7 @@ def update_customer(customer_id):
     existing_email = db.session.query(Customers).where(Customers.email == customer_data["email"], Customers.id != customer_id).first()
     if existing_email:
         return jsonify({"error" : f"{customer_data["email"]} is already taken with another customer."}), 400
+    customer_data["password"] = generate_password_hash(customer_data["password"])
     for key, value in customer_data.items():
         setattr(customer, key, value)
     db.session.commit()

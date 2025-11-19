@@ -4,6 +4,7 @@ from .schemas import mechanic_schema, mechanics_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
 from app.blueprints.service_tickets.schemas import service_tickets_schema
+from werkzeug.security import generate_password_hash, check_password_hash
 
 @mechanics_bp.route('', methods=["POST"])
 def create_mechanic():
@@ -15,6 +16,7 @@ def create_mechanic():
     exist_mechanic = db.session.query(Mechanics).where(Mechanics.email == data["email"]).first()
     if exist_mechanic:
         return jsonify({"error" : f"{data["email"]} is already associated with a mechanic's account."}), 400
+    data["password"] = generate_password_hash(data["password"])
     new_mechanic = Mechanics(**data)
     db.session.add(new_mechanic)
     db.session.commit()
@@ -54,6 +56,7 @@ def update_mechanic(mechanic_id):
     existing_email = db.session.query(Mechanics).where(Mechanics.email == mechanic_data["email"], Mechanics.id != mechanic_id).first()
     if existing_email:
         return jsonify({"error" : f"{mechanic_data["email"]} is already taken with another mechanic."}), 400
+    mechanic_data["password"] = generate_password_hash(mechanic_data["password"])
     for key, value in mechanic_data.items():
         setattr(mechanic, key, value)
     db.session.commit()
