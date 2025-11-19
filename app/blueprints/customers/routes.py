@@ -1,10 +1,29 @@
 from app.blueprints.customers import customers_bp
 from app.models import Customers, db, Service_tickets
-from .schemas import customer_schema, customers_schema
+from .schemas import customer_schema, customers_schema, customer_login_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
 from app.blueprints.service_tickets.schemas import service_tickets_schema
-from werkzeug.security import generate_password_hash, check_password_hash 
+from werkzeug.security import generate_password_hash, check_password_hash
+from app.utils.auth import encode_token
+
+#LOGIN ROUTE
+@customers_bp.route('/login', methods=['POST'])
+def login():
+    try:
+        credential_date = customer_login_schema.load(request.json)
+    except ValidationError as e:
+        return jsonify({"error message" : e.messages}), 400
+    customer = db.session.query(Customers).where(Customers.email == credential_date["email"]).first()
+    if customer and check_password_hash(customer.password, credential_date["password"]):
+        customer_token = encode_token(customer.id)
+        response = {
+            "message" : f"Successfully logged in. Welcome {customer.first_name}",
+            "token" : customer_token
+        }
+        return jsonify(response)
+    else:
+        return jsonify({"error message" : "Invalid email or password."}), 400
 
 @customers_bp.route('', methods=["POST"])
 def create_customer():
@@ -20,7 +39,10 @@ def create_customer():
     new_customer = Customers(**data)
     db.session.add(new_customer)
     db.session.commit()
-    return customer_schema.jsonify(new_customer), 201
+    new_customer_token = encode_token(new_customer.id)
+    response = {"customer_data" : data,
+                "token" : new_customer_token}
+    return jsonify(response), 201
 
 @customers_bp.route('', methods=["GET"])
 def read_customers():
