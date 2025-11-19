@@ -8,11 +8,12 @@ import jose
 
 SECRET_KEY = 'SUPER Secret Code'
 
-def encode_token(id):
+def encode_token(id, role):
     payload = {
         'iat' : datetime.now(timezone.utc), #issued 
         'exp' : datetime.now(timezone.utc) + timedelta(days=0, hours=1), #expiration data
-        'sub' : str(id)
+        'sub' : str(id),
+        'role' : role
     }
 
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
@@ -31,6 +32,7 @@ def token_required(f):
         try:
             data = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
             request.user_id = data['sub']
+            request.user_role = data['role']
         except jose.exceptions.ExpiredSignatureError:
             return jsonify({'message':'token is expired'}), 403
         except jose.exceptions.JWTError:
