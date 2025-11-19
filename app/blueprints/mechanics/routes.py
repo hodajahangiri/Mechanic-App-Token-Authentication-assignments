@@ -5,7 +5,7 @@ from flask import request, jsonify
 from marshmallow import ValidationError
 from app.blueprints.service_tickets.schemas import service_tickets_schema
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.utils.auth import encode_token
+from app.utils.auth import encode_token, token_required
 
 #LOGIN ROUTE
 @mechanics_bp.route('/login', methods=['POST'])
@@ -49,15 +49,19 @@ def read_mechanics():
     mechanics = db.session.query(Mechanics).all()
     return mechanics_schema.jsonify(mechanics), 200
 
-@mechanics_bp.route('/<int:mechanic_id>', methods=["GET"])
-def read_mechanic(mechanic_id):
+@mechanics_bp.route('/profile', methods=["GET"])
+@token_required
+def read_mechanic():
+    mechanic_id = request.user_id
     mechanic = db.session.get(Mechanics, mechanic_id)
     if not mechanic:
         return jsonify({"error" : f"Mechanic with id: {mechanic_id} not found."}), 404
     return mechanic_schema.jsonify(mechanic), 200
 
-@mechanics_bp.route('/<int:mechanic_id>', methods=["DELETE"])
-def delete_mechanic(mechanic_id):
+@mechanics_bp.route('', methods=["DELETE"])
+@token_required
+def delete_mechanic():
+    mechanic_id = request.user_id
     mechanic = db.session.get(Mechanics, mechanic_id)
     if not mechanic:
         return jsonify({"error" : f"Mechanic with id: {mechanic_id} not found."}), 404
@@ -65,8 +69,10 @@ def delete_mechanic(mechanic_id):
     db.session.commit()
     return jsonify({"message" : f"Successfully deleted mechanic with id: {mechanic_id}"}), 200
    
-@mechanics_bp.route('/<int:mechanic_id>', methods=["PUT"])
-def update_mechanic(mechanic_id):
+@mechanics_bp.route('', methods=["PUT"])
+@token_required
+def update_mechanic():
+    mechanic_id = request.user_id
     mechanic = db.session.get(Mechanics, mechanic_id)
     if not mechanic:
        return jsonify({"error" : f"Mechanic with id: {mechanic_id} not found."}), 404
@@ -84,8 +90,10 @@ def update_mechanic(mechanic_id):
     db.session.commit()
     return jsonify({"message" : f"Successfully mechanic with id: {mechanic_id} updated."}), 200
 
-@mechanics_bp.route('/service_tickets/<int:mechanic_id>',methods=["GET"])
-def read_mechanic_service_tickets(mechanic_id):
+@mechanics_bp.route('/service_tickets',methods=["GET"])
+@token_required
+def read_mechanic_service_tickets():
+    mechanic_id = request.user_id
     mechanic = db.session.get(Mechanics,mechanic_id)
     if not mechanic:
         return jsonify({"error" : f"Mechanic with id: {mechanic_id} not found."}), 404
