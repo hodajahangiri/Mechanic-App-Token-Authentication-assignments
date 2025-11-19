@@ -4,9 +4,12 @@ from flask import request, jsonify
 from marshmallow import ValidationError
 from app.models import Service_tickets, db, Customers, Mechanics
 from app.blueprints.mechanics.schemas import mechanics_schema
+from app.utils.auth import token_required
 
-@service_tickets_bp.route('/<int:customer_id>', methods=["POST"])
-def create_service_ticket(customer_id):
+@service_tickets_bp.route('', methods=["POST"])
+@token_required
+def create_service_ticket():
+    customer_id = request.user_id
     customer = db.session.get(Customers, customer_id)
     if not customer:
         return jsonify({"error" : f"Customer with id: {customer_id} not found."}), 404
