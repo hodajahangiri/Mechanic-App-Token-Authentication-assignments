@@ -5,7 +5,7 @@ from flask import request, jsonify
 from marshmallow import ValidationError
 from app.blueprints.service_tickets.schemas import service_tickets_schema
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.utils.auth import encode_token
+from app.utils.auth import encode_token, token_required
 
 #LOGIN ROUTE
 @customers_bp.route('/login', methods=['POST'])
@@ -49,15 +49,19 @@ def read_customers():
     customers = db.session.query(Customers).all()
     return customers_schema.jsonify(customers), 200
 
-@customers_bp.route('/<int:customer_id>', methods=["GET"])
-def read_customer(customer_id):
+@customers_bp.route('/profile', methods=["GET"])
+@token_required
+def read_customer():
+    customer_id = request.user_id
     customer = db.session.get(Customers, customer_id)
     if not customer:
         return jsonify({"error" : f"Customer with id: {customer_id} not found."}), 404
     return customer_schema.jsonify(customer), 200
 
-@customers_bp.route('/<int:customer_id>', methods=["DELETE"])
-def delete_customer(customer_id):
+@customers_bp.route('', methods=["DELETE"])
+@token_required
+def delete_customer():
+    customer_id = request.user_id
     customer = db.session.get(Customers, customer_id)
     if not customer:
         return jsonify({"error" : f"Customer with id: {customer_id} not found."}), 404
@@ -69,8 +73,10 @@ def delete_customer(customer_id):
     db.session.commit()
     return jsonify({"message" : f"Successfully deleted customer with id: {customer_id}"}), 200
     
-@customers_bp.route('/<int:customer_id>', methods=["PUT"])
-def update_customer(customer_id):
+@customers_bp.route('', methods=["PUT"])
+@token_required
+def update_customer():
+    customer_id = request.user_id
     customer = db.session.get(Customers, customer_id)
     if not customer:
        return jsonify({"error" : f"Customer with id: {customer_id} not found."}), 404
@@ -88,8 +94,10 @@ def update_customer(customer_id):
     db.session.commit()
     return jsonify({"message" : f"Successfully customer with id: {customer_id} updated."}), 200
 
-@customers_bp.route('/service_tickets/<int:customer_id>', methods=["GET"])
-def read_customer_service_tickets(customer_id):
+@customers_bp.route('/service_tickets', methods=["GET"])
+@token_required
+def read_customer_service_tickets():
+    customer_id = request.user_id
     customer = db.session.get(Customers, customer_id)
     if not customer:
         return jsonify({"error" : f"Customer with id: {customer_id} not found."}), 404
