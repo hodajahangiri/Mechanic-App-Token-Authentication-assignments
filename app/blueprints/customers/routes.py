@@ -118,3 +118,10 @@ def read_customer_service_tickets():
         return service_tickets_schema.jsonify(customer.service_tickets), 200
     else:
         return jsonify({"message" : f"{user_role} is not allowed."})
+
+
+@customers_bp.route('/search_by_email', methods=["GET"])
+def search_by_email():
+    email = request.args.get('email')
+    customers = db.session.query(Customers).where(Customers.email.ilike(f"%{email}%")).all()
+    return customers_schema.jsonify(customers), 200
