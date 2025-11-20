@@ -115,3 +115,15 @@ def read_mechanic_service_tickets():
         return service_tickets_schema.jsonify(mechanic.tickets), 200
     else:
         return jsonify({"message" : f"{user_role} is not allowed."})
+    
+
+@mechanics_bp.route('/hard_work_mechanic', methods=["GET"])
+def get_hard_work_mechanic():
+    mechanics = db.session.query(Mechanics).all()
+    mechanics.sort(key = lambda mechanic : len(mechanic.tickets), reverse=True)
+    hard_work_mechanic = mechanics[0]
+    response = {
+        "mechanic" : mechanic_schema.dump(hard_work_mechanic),
+        "tickets_count" : len(hard_work_mechanic.tickets)
+    }
+    return jsonify(response), 200
