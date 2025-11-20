@@ -5,6 +5,7 @@ from marshmallow import ValidationError
 from app.models import Service_tickets, db, Customers, Mechanics
 from app.blueprints.mechanics.schemas import mechanics_schema
 from app.utils.auth import token_required
+from sqlalchemy import select
 
 @service_tickets_bp.route('', methods=["POST"])
 @token_required
@@ -31,8 +32,15 @@ def create_service_ticket():
 
 @service_tickets_bp.route('', methods=["GET"])
 def read_service_tickets():
-    service_tickets = db.session.query(Service_tickets).all()
-    return service_tickets_schema.jsonify(service_tickets), 200
+    try:
+        page = int(request.args.get('page'))
+        per_page = int(request.args.get('per_page'))
+        query = select(Service_tickets)
+        service_tickets = db.paginate(query,page=page, per_page=per_page) #Handles our pagination so we don't have to be worry about pagination with hard code
+        return service_tickets_schema.jsonify(service_tickets), 200
+    except:
+        service_tickets = db.session.query(Service_tickets).all()
+        return service_tickets_schema.jsonify(service_tickets), 200
 
 @service_tickets_bp.route('/<int:service_ticket_id>', methods=["GET"])
 def read_service_ticket(service_ticket_id):
