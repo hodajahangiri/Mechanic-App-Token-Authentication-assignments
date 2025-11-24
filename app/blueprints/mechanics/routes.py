@@ -132,3 +132,16 @@ def get_hard_work_mechanic():
         "tickets_count" : len(hard_work_mechanic.tickets)
     }
     return jsonify(response), 200
+
+@mechanics_bp.route('/sort_by_work', methods=["GET"])
+def get_sorted_mechanic_list_by_work():
+    mechanics = db.session.query(Mechanics).all()
+    mechanics.sort(key = lambda mechanic : len(mechanic.tickets), reverse=True)
+    sorted_mechanics_list = []
+    for mechanic in mechanics:
+        mechanic_result_format = {
+            "mechanic" : mechanic_schema.dump(mechanic),
+            "tickets_count" : len(mechanic.tickets)
+        }
+        sorted_mechanics_list.append(mechanic_result_format)
+    return jsonify(sorted_mechanics_list), 200
