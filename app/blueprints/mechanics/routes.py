@@ -65,7 +65,7 @@ def read_mechanic():
             return jsonify({"error" : f"Mechanic with id: {mechanic_id} not found."}), 404
         return mechanic_schema.jsonify(mechanic), 200
     else:
-        return jsonify({"message" : f"{user_role} is not allowed."})
+        return jsonify({"message" : f"{user_role} is not allowed."}), 400
 
 @mechanics_bp.route('', methods=["DELETE"])
 @token_required
@@ -80,7 +80,7 @@ def delete_mechanic():
         db.session.commit()
         return jsonify({"message" : f"Successfully deleted mechanic with id: {mechanic_id}"}), 200
     else:
-        return jsonify({"message" : f"{user_role} is not allowed."})
+        return jsonify({"message" : f"{user_role} is not allowed."}), 400
     
 
 @mechanics_bp.route('', methods=["PUT"])
@@ -106,7 +106,7 @@ def update_mechanic():
         db.session.commit()
         return jsonify({"message" : f"Successfully mechanic with id: {mechanic_id} updated."}), 200
     else:
-        return jsonify({"message" : f"{user_role} is not allowed."})
+        return jsonify({"message" : f"{user_role} is not allowed."}), 400
     
 @mechanics_bp.route('/service_tickets',methods=["GET"])
 @token_required
@@ -119,7 +119,7 @@ def read_mechanic_service_tickets():
             return jsonify({"error" : f"Mechanic with id: {mechanic_id} not found."}), 404
         return service_tickets_schema.jsonify(mechanic.tickets), 200
     else:
-        return jsonify({"message" : f"{user_role} is not allowed."})
+        return jsonify({"message" : f"{user_role} is not allowed."}), 400
     
 
 @mechanics_bp.route('/hard_work_mechanic', methods=["GET"])

@@ -73,7 +73,7 @@ def read_customer():
             return jsonify({"error" : f"Customer with id: {customer_id} not found."}), 404
         return customer_schema.jsonify(customer), 200
     else:
-        return jsonify({"message" : f"{user_role} is not allowed."})
+        return jsonify({"message" : f"{user_role} is not allowed."}),400
 
 @customers_bp.route('', methods=["DELETE"])
 @token_required
@@ -92,7 +92,7 @@ def delete_customer():
         db.session.commit()
         return jsonify({"message" : f"Successfully deleted customer with id: {customer_id}"}), 200
     else:
-        return jsonify({"message" : f"{user_role} is not allowed."})
+        return jsonify({"message" : f"{user_role} is not allowed."}), 400
     
 @customers_bp.route('', methods=["PUT"])
 @token_required
@@ -117,7 +117,7 @@ def update_customer():
         db.session.commit()
         return jsonify({"message" : f"Successfully customer with id: {customer_id} updated."}), 200
     else:
-        return jsonify({"message" : f"{user_role} is not allowed."})
+        return jsonify({"message" : f"{user_role} is not allowed."}), 400
     
 @customers_bp.route('/service_tickets', methods=["GET"])
 @token_required
@@ -130,7 +130,7 @@ def read_customer_service_tickets():
             return jsonify({"error" : f"Customer with id: {customer_id} not found."}), 404
         return service_tickets_schema.jsonify(customer.service_tickets), 200
     else:
-        return jsonify({"message" : f"{user_role} is not allowed."})
+        return jsonify({"message" : f"{user_role} is not allowed."}), 400
 
 
 @customers_bp.route('/search_by_email', methods=["GET"])

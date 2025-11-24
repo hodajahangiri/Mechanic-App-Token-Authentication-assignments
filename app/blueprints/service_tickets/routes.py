@@ -30,7 +30,7 @@ def create_service_ticket():
         db.session.commit()
         return service_ticket_schema.jsonify(new_service_ticket), 201
     else:
-        return jsonify({"message" : f"{user_role} is not allowed."})
+        return jsonify({"message" : f"{user_role} is not allowed."}), 400
 
 @service_tickets_bp.route('', methods=["GET"])
 def read_service_tickets():
