@@ -7,7 +7,7 @@ ma = Marshmallow()
 
 limiter = Limiter(
     key_func=get_remote_address,
-    default_limits=["30 per day", "5 per hour"]
+    default_limits=["50 per day", "10 per hour"]
 )
 
 cache = Cache()
