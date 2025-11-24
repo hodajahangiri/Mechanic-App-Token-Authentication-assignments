@@ -35,8 +35,8 @@ def create_service_ticket():
 @service_tickets_bp.route('', methods=["GET"])
 def read_service_tickets():
     try:
-        page = int(request.args.get('page'))
-        per_page = int(request.args.get('per_page'))
+        page = request.args.get('page',type=int)
+        per_page = request.args.get('per_page',type=int)
         query = select(Service_tickets)
         service_tickets = db.paginate(query,page=page, per_page=per_page) #Handles our pagination so we don't have to be worry about pagination with hard code
         return service_tickets_schema.jsonify(service_tickets), 200
