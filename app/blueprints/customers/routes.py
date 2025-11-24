@@ -6,9 +6,11 @@ from marshmallow import ValidationError
 from app.blueprints.service_tickets.schemas import service_tickets_schema
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.utils.auth import encode_token, token_required
+from app.extensions import limiter
 
 #LOGIN ROUTE
 @customers_bp.route('/login', methods=['POST'])
+@limiter.limit("3 per hour")
 def login():
     try:
         credential_data = customer_login_schema.load(request.json)
@@ -26,6 +28,7 @@ def login():
         return jsonify({"error message" : "Invalid email or password."}), 400
 
 @customers_bp.route('', methods=["POST"])
+@limiter.limit("3 per hour")
 def create_customer():
     try:
         data = customer_schema.load(request.json)
@@ -45,6 +48,7 @@ def create_customer():
     return jsonify(response), 201
 
 @customers_bp.route('', methods=["GET"])
+@limiter.limit("300 per day", override_defaults=True) 
 def read_customers():
     customers = db.session.query(Customers).all()
     return customers_schema.jsonify(customers), 200

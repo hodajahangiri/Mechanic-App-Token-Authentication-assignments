@@ -6,9 +6,11 @@ from marshmallow import ValidationError
 from app.blueprints.service_tickets.schemas import service_tickets_schema
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.utils.auth import encode_token, token_required
+from app.extensions import limiter
 
 #LOGIN ROUTE
 @mechanics_bp.route('/login', methods=['POST'])
+@limiter.limit("20 per minute", override_defaults=True)
 def login():
     try:
         credential_data = mechanic_login_schema.load(request.json)
@@ -26,6 +28,7 @@ def login():
         return jsonify({"error message" : "Invalid email or password."}), 400
 
 @mechanics_bp.route('', methods=["POST"])
+@limiter.limit("10 per hour")
 def create_mechanic():
     try:
         data = mechanic_schema.load(request.json)

@@ -6,8 +6,10 @@ from app.models import Service_tickets, db, Customers, Mechanics
 from app.blueprints.mechanics.schemas import mechanics_schema
 from app.utils.auth import token_required
 from sqlalchemy import select
+from app.extensions import limiter
 
 @service_tickets_bp.route('', methods=["POST"])
+@limiter.limit("3 per hour")
 @token_required
 def create_service_ticket():
     user_role = request.user_role
