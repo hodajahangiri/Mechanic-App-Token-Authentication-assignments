@@ -6,7 +6,7 @@ from marshmallow import ValidationError
 from app.blueprints.service_tickets.schemas import service_tickets_schema
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.utils.auth import encode_token, token_required
-from app.extensions import limiter
+from app.extensions import limiter, cache
 
 #LOGIN ROUTE
 @mechanics_bp.route('/login', methods=['POST'])
@@ -48,6 +48,8 @@ def create_mechanic():
     return jsonify(response), 201
 
 @mechanics_bp.route('', methods=["GET"])
+@limiter.limit("20 per minute", override_defaults=True)
+@cache.cached(timeout=10)
 def read_mechanics():
     mechanics = db.session.query(Mechanics).all()
     return mechanics_schema.jsonify(mechanics), 200

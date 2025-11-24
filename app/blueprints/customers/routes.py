@@ -6,7 +6,7 @@ from marshmallow import ValidationError
 from app.blueprints.service_tickets.schemas import service_tickets_schema
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.utils.auth import encode_token, token_required
-from app.extensions import limiter
+from app.extensions import limiter, cache
 
 #LOGIN ROUTE
 @customers_bp.route('/login', methods=['POST'])
@@ -49,6 +49,7 @@ def create_customer():
 
 @customers_bp.route('', methods=["GET"])
 @limiter.limit("300 per day", override_defaults=True) 
+@cache.cached(timeout=10)
 def read_customers():
     customers = db.session.query(Customers).all()
     return customers_schema.jsonify(customers), 200
