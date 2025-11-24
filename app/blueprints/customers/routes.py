@@ -7,6 +7,7 @@ from app.blueprints.service_tickets.schemas import service_tickets_schema
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.utils.auth import encode_token, token_required
 from app.extensions import limiter, cache
+from sqlalchemy import select
 
 #LOGIN ROUTE
 @customers_bp.route('/login', methods=['POST'])
@@ -49,10 +50,17 @@ def create_customer():
 
 @customers_bp.route('', methods=["GET"])
 @limiter.limit("300 per day", override_defaults=True) 
-@cache.cached(timeout=10)
+# @cache.cached(timeout=10)
 def read_customers():
-    customers = db.session.query(Customers).all()
-    return customers_schema.jsonify(customers), 200
+    try:
+        page = request.args.get('page',type=int)
+        per_page = request.args.get('per_page',type=int)
+        query = select(Customers)
+        customers = db.paginate(query,page=page, per_page=per_page) #Handles our pagination so we don't have to be worry about pagination with hard code
+        return customers_schema.jsonify(customers), 200
+    except:
+        customers = db.session.query(Customers).all()
+        return customers_schema.jsonify(customers), 200
 
 @customers_bp.route('/profile', methods=["GET"])
 @token_required
