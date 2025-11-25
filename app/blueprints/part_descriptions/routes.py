@@ -50,7 +50,7 @@ def update_part_description(part_description_id):
         return jsonify({"error": e.messages}), 400
     
     for key, value in description_data.items():
-            setattr(part_description, key, value)
+        setattr(part_description, key, value)
     db.session.commit()
     return jsonify({"message" : f"Successfully description with id: {part_description_id} updated."}), 200
 

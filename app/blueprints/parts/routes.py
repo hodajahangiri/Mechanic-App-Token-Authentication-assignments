@@ -2,7 +2,7 @@ from . import parts_bp
 from .schemas import part_schema, parts_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
-from app.models import db, Parts, PartDescriptions
+from app.models import db, Parts
 
 
 
@@ -54,6 +54,25 @@ def get_specific_part(part_id):
     if part:
         return part_schema.jsonify(part), 200
     return jsonify({"message" : f"part with part_id : {part_id} not found"})
+
+@parts_bp.route('/<int:part_id>',methods=['PUT'])
+def update_part(part_id):
+    part_to_update = db.session.get(Parts,part_id)
+    if not part_to_update:
+        return jsonify({"message" : f"Part with id: {part_id} not found"}), 404
+    try:
+        part_data = part_schema.load(request.json)
+    except ValidationError as e:
+        return jsonify({"error": e.messages}), 400
+    # Check to avoid duplicate serial number
+    exist_serial_number = db.session.query(Parts).where(Parts.serial_number==part_data["serial_number"], Parts.id != part_to_update.id).first()
+    if exist_serial_number:
+        return jsonify({"message" : f"This serial number: {part_data["serial_number"]} belongs to another product, you can not choose it,"}), 400
+    
+    for key, value in part_data.items():
+        setattr(part_to_update, key, value)
+    db.session.commit()
+    return jsonify({"message" : f"Successfully part with id: {part_id} updated."}), 200
 
 
 
