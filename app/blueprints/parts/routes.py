@@ -35,6 +35,25 @@ def check_existing_serial_number(serial_number):
         return True
     return False
 
+@parts_bp.route('', methods=['GET'])
+def get_all_parts():
+    parts = db.session.query(Parts).all()
+    response = []
+    for part in parts:
+        response_format = {
+            "part": part_schema.dump(part),
+            "part_name" : part.part_description.name,
+            "part_price" : part.part_description.price
+        }
+        response.append(response_format)
+    return jsonify(response), 200
+
+@parts_bp.route('/<int:part_id>', methods=['GET'])
+def get_specific_part(part_id):
+    part = db.session.get(Parts,part_id)
+    if part:
+        return part_schema.jsonify(part), 200
+    return jsonify({"message" : f"part with part_id : {part_id} not found"})
 
 
 
