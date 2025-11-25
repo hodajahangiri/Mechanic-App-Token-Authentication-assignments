@@ -39,4 +39,20 @@ def get_all_descriptions_by_name():
         return jsonify({"message" : "There is no part description to show."}), 200
     return part_descriptions_schema.jsonify(part_descriptions), 200
 
+@part_descriptions_bp.route('/<int:part_description_id>',methods=['PUT'])
+def update_part_description(part_description_id):
+    part_description = db.session.get(PartDescriptions,part_description_id)
+    if not part_description:
+        return jsonify({"message" : f"Description with id: {part_description_id} not found"}), 404
+    try:
+        description_data = part_description_schema.load(request.json)
+    except ValidationError as e:
+        return jsonify({"error": e.messages}), 400
+    
+    for key, value in description_data.items():
+            setattr(part_description, key, value)
+    db.session.commit()
+    return jsonify({"message" : f"Successfully description with id: {part_description_id} updated."}), 200
+
+
 
