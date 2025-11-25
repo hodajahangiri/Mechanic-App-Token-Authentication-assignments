@@ -20,7 +20,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"Bob\",\n    \"last_name\": \"Lee\",\n    \"email\": \"bob@gmail.com\",\n    \"password\" : \"1234\",\n    \"phone\": \"+14084556597\",\n    \"address\": \"Street 1\"\n}",
+							"raw": "{\n    \"first_name\": \"fally\",\n    \"last_name\": \"Lee\",\n    \"email\": \"fally@gmail.com\",\n    \"password\" : \"1234\",\n    \"phone\": \"+14084556597\",\n    \"address\": \"Street 1\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -70,6 +70,41 @@
 					"response": []
 				},
 				{
+					"name": "Get all customers by pagination",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/customers?page=1&per_page=2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"customers"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get a specific customer",
 					"request": {
 						"auth": {
@@ -77,7 +112,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjM1OTA0MDcsImV4cCI6MTc2MzU5NDAwNywic3ViIjoiMSIsInJvbGUiOiJjdXN0b21lciJ9.S1XOcduTzWU0VuG4HuDjsxZbHsTQpQxYwBBsbXFBVyo",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjQxMTA5MTIsImV4cCI6MTc2NDExNDUxMiwic3ViIjoiMSIsInJvbGUiOiJjdXN0b21lciJ9.CNUwpqieSwAwAuej35Ir8cNbVwwst629Mu_USD-vVOk",
 									"type": "string"
 								}
 							]
@@ -110,7 +145,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjM1OTA0MDcsImV4cCI6MTc2MzU5NDAwNywic3ViIjoiMSIsInJvbGUiOiJjdXN0b21lciJ9.S1XOcduTzWU0VuG4HuDjsxZbHsTQpQxYwBBsbXFBVyo",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjQxMTA5MTIsImV4cCI6MTc2NDExNDUxMiwic3ViIjoiMSIsInJvbGUiOiJjdXN0b21lciJ9.CNUwpqieSwAwAuej35Ir8cNbVwwst629Mu_USD-vVOk",
 									"type": "string"
 								}
 							]
@@ -183,7 +218,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjM1OTA0MDcsImV4cCI6MTc2MzU5NDAwNywic3ViIjoiMSIsInJvbGUiOiJjdXN0b21lciJ9.S1XOcduTzWU0VuG4HuDjsxZbHsTQpQxYwBBsbXFBVyo",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjQxMTA5MTIsImV4cCI6MTc2NDExNDUxMiwic3ViIjoiMSIsInJvbGUiOiJjdXN0b21lciJ9.CNUwpqieSwAwAuej35Ir8cNbVwwst629Mu_USD-vVOk",
 									"type": "string"
 								}
 							]
@@ -218,7 +253,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"bob@gmail.com\",\n    \"password\" : \"1234\"\n}",
+							"raw": "{\n    \"email\": \"bobb@gmail.com\",\n    \"password\" : \"1234\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -242,6 +277,35 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Search customers by email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/customers/search_by_email?email=fally",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"customers",
+								"search_by_email"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "fally"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -258,7 +322,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Jay\",\n    \"email\": \"john@gmail.com\",\n    \"password\" : \"1234\",\n    \"phone\": \"+14082222222\",\n    \"address\": \"Street 5\",\n    \"salary\" : 4000.99\n}",
+							"raw": "{\n    \"first_name\": \"Mostafa\",\n    \"last_name\": \"Java\",\n    \"email\": \"hostafa@gmail.com\",\n    \"password\" : \"1234\",\n    \"phone\": \"+14082222222\",\n    \"address\": \"Street 5\",\n    \"salary\" : 4000.99\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -315,7 +379,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjM1OTA5MzAsImV4cCI6MTc2MzU5NDUzMCwic3ViIjoiMSIsInJvbGUiOiJtZWNoYW5pYyJ9.bMgCACOn1661hGydDIxbFSZubHCGMXIY5AvvmymFglc",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjQxMTEyMDEsImV4cCI6MTc2NDExNDgwMSwic3ViIjoiMSIsInJvbGUiOiJtZWNoYW5pYyJ9.-USrYEAgMgKVX9OOGqb9M8goVCIE-O6od12fgnQz4AY",
 									"type": "string"
 								}
 							]
@@ -348,7 +412,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjM1OTA5MzAsImV4cCI6MTc2MzU5NDUzMCwic3ViIjoiMSIsInJvbGUiOiJtZWNoYW5pYyJ9.bMgCACOn1661hGydDIxbFSZubHCGMXIY5AvvmymFglc",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjQxMTEyMDEsImV4cCI6MTc2NDExNDgwMSwic3ViIjoiMSIsInJvbGUiOiJtZWNoYW5pYyJ9.-USrYEAgMgKVX9OOGqb9M8goVCIE-O6od12fgnQz4AY",
 									"type": "string"
 								}
 							]
@@ -430,7 +494,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjM1OTA5MzAsImV4cCI6MTc2MzU5NDUzMCwic3ViIjoiMSIsInJvbGUiOiJtZWNoYW5pYyJ9.bMgCACOn1661hGydDIxbFSZubHCGMXIY5AvvmymFglc",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjQxMTEyMDEsImV4cCI6MTc2NDExNDgwMSwic3ViIjoiMSIsInJvbGUiOiJtZWNoYW5pYyJ9.-USrYEAgMgKVX9OOGqb9M8goVCIE-O6od12fgnQz4AY",
 									"type": "string"
 								}
 							]
@@ -489,6 +553,86 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get hard_work mechanic",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjM1OTA5MzAsImV4cCI6MTc2MzU5NDUzMCwic3ViIjoiMSIsInJvbGUiOiJtZWNoYW5pYyJ9.bMgCACOn1661hGydDIxbFSZubHCGMXIY5AvvmymFglc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Johny\",\n    \"last_name\": \"Dep\",\n    \"email\": \"johny@gmail.com\",\n    \"password\" : \"12345\",\n    \"phone\": \"+14082222288\",\n    \"address\": \"Street 5,CA\",\n    \"salary\" : 4500.99\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/mechanics/hard_work_mechanic",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"mechanics",
+								"hard_work_mechanic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get sorted mechanics by work",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjM1OTA5MzAsImV4cCI6MTc2MzU5NDUzMCwic3ViIjoiMSIsInJvbGUiOiJtZWNoYW5pYyJ9.bMgCACOn1661hGydDIxbFSZubHCGMXIY5AvvmymFglc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Johny\",\n    \"last_name\": \"Dep\",\n    \"email\": \"johny@gmail.com\",\n    \"password\" : \"12345\",\n    \"phone\": \"+14082222288\",\n    \"address\": \"Street 5,CA\",\n    \"salary\" : 4500.99\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/mechanics/sort_by_work",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"mechanics",
+								"sort_by_work"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -503,7 +647,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjM1OTEyNjYsImV4cCI6MTc2MzU5NDg2Niwic3ViIjoiMSIsInJvbGUiOiJjdXN0b21lciJ9.ciwp7hAosnniFhnFXam4qzBdfM30amX16-VGU3bUZjw",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3NjQxMTExNTAsImV4cCI6MTc2NDExNDc1MCwic3ViIjoiMSIsInJvbGUiOiJjdXN0b21lciJ9.XMPYry9Zb3pXFnS8tUBEqX0je6JSVbroopmOpM3IJI0",
 									"type": "string"
 								}
 							]
@@ -512,7 +656,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"service_desc\": \"Oil change\",\n    \"price\": 190.99,\n    \"VIN\": \"5XYZWDLA0FG267935\"\n}\n    ",
+							"raw": "{\n    \"service_desc\": \"change Battery\",\n    \"price\": 190.99,\n    \"VIN\": \"5XYZWDLA0FG267935\"\n}\n    ",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -631,7 +775,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/service_tickets/1",
+							"raw": "http://127.0.0.1:5000/service_tickets/2",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -642,7 +786,7 @@
 							"port": "5000",
 							"path": [
 								"service_tickets",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -676,7 +820,7 @@
 					"response": []
 				},
 				{
-					"name": "Add relation (service_ticket : mechanics)",
+					"name": "Add mechanic(service_ticket : mechanics)",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -684,7 +828,7 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:5000/service_tickets/1/assign-mechanic/1",
+							"raw": "http://127.0.0.1:5000/service_tickets/1/assign-mechanic/2",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -697,14 +841,14 @@
 								"service_tickets",
 								"1",
 								"assign-mechanic",
-								"1"
+								"2"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Remove relation (service_ticket : mechanics)",
+					"name": "Remove mechanic(service_ticket : mechanics)",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -726,6 +870,420 @@
 								"",
 								"1",
 								"remove-mechanic",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all service tickets by pagination",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/service_tickets?page=1&per_page=2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"service_tickets"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add part to service_ticket",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/service_tickets/1/add_part/3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"service_tickets",
+								"1",
+								"add_part",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove part from service_ticket",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/service_tickets/1/remove_part/4",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"service_tickets",
+								"1",
+								"remove_part",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "part_descriptions",
+			"item": [
+				{
+					"name": "Create a part description",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Tire\",\r\n    \"price\": 200.99,\r\n    \"made_in\" : \"China\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/part_descriptions",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"part_descriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all part descriptions",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/part_descriptions",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"part_descriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search part descriptions by name",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/part_descriptions/search_by_name?name=tire",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"part_descriptions",
+								"search_by_name"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "tire"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a specific part description",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Tire\",\r\n    \"price\": 900.99,\r\n    \"made_in\" : \"US\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/part_descriptions/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"part_descriptions",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a specific part descriptionc",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/part_descriptions/5",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"part_descriptions",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "parts",
+			"item": [
+				{
+					"name": "Create part(s)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"serial_number\":\"BATTERY351\",\r\n    \"desc_id\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/parts?gty=3",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"parts"
+							],
+							"query": [
+								{
+									"key": "gty",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all parts",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/parts",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"parts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a specific part",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:5000/parts/2",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"parts",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a specific part",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"serial_number\":\"BATTERY351-3\",\n    \"desc_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/parts/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"parts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a specific part",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"serial_number\":\"TIRE351\",\n    \"desc_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/parts/1",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"parts",
 								"1"
 							]
 						}
