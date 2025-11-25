@@ -2,7 +2,7 @@ from .schemas import service_ticket_schema, service_tickets_schema
 from app.blueprints.service_tickets import service_tickets_bp
 from flask import request, jsonify
 from marshmallow import ValidationError
-from app.models import Service_tickets, db, Customers, Mechanics
+from app.models import Service_tickets, db, Customers, Mechanics, Parts
 from app.blueprints.mechanics.schemas import mechanics_schema
 from app.utils.auth import token_required
 from sqlalchemy import select
@@ -113,3 +113,37 @@ def remove_mechanic_from_service_ticket(service_ticket_id,mechanic_id):
         return jsonify({"message" : f"Successfully mechanic with id: {mechanic_id} removed from service_ticket with id:{service_ticket_id}."}), 200
     else:
         return jsonify({"message" : f"{mechanic.last_name} is not in service_ticket with id: {service_ticket.id}"}),200
+
+
+
+# Create a route to add part to service_ticket
+@service_tickets_bp.route('/<int:service_ticket_id>/add_part/<int:part_id>', methods=["PUT"])
+def add_part_to_service_ticket(service_ticket_id,part_id):
+    service_ticket = db.session.get(Service_tickets, service_ticket_id)
+    part = db.session.get(Parts, part_id)
+    if not service_ticket:
+        return jsonify({"error" : f"Service_ticket with id: {service_ticket_id} not found."}), 404
+    if not part:
+       return jsonify({"error" : f"Part with id: {part_id} not found."}), 404
+    if part not in service_ticket.parts:
+        service_ticket.parts.append(part)
+        db.session.commit()
+        return jsonify({"message" : f"Successfully part with id: {part_id} added to service_ticket with id:{service_ticket_id}."}), 200
+    else:
+        return jsonify({"message" : f"{part.part_description.name} is already added in service_ticket with id:{service_ticket_id}."}),200
+    
+
+@service_tickets_bp.route('/<int:service_ticket_id>/remove_part/<int:part_id>', methods=["PUT"])
+def remove_part_from_service_ticket(service_ticket_id,part_id):
+    service_ticket = db.session.get(Service_tickets, service_ticket_id)
+    part = db.session.get(Parts, part_id)
+    if not service_ticket:
+        return jsonify({"error" : f"Service_ticket with id: {service_ticket_id} not found."}), 404
+    if not part:
+       return jsonify({"error" : f"Part with id: {part_id} not found."}), 404
+    if part in service_ticket.parts:
+        service_ticket.parts.remove(part)
+        db.session.commit()
+        return jsonify({"message" : f"Successfully part with id: {part_id} removed from service_ticket with id:{service_ticket_id}."}), 200
+    else:
+        return jsonify({"message" : f"{part.part_description.name} is not in service_ticket with id:{service_ticket_id}."}),200
