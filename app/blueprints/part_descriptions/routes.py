@@ -14,13 +14,29 @@ def create_part_description():
         data = part_description_schema.load(request.json)
     except ValidationError as e:
         return jsonify({"error": e.messages}), 400
-    
+    # Avoid to create duplicate description
+    description = db.session.query(PartDescriptions).where(PartDescriptions.name==data["name"],PartDescriptions.price==data["price"], PartDescriptions.made_in==data["made_in"]).first()
+    if description:
+        return jsonify({"message" : "These description is already exist, you can not add same description."}),400
     new_description = PartDescriptions(**data)
     db.session.add(new_description)
     db.session.commit()
     return part_description_schema.jsonify(new_description), 201
 
 
+@part_descriptions_bp.route('', methods=['GET'])
+def get_all_part_descriptions():
+    part_descriptions = db.session.query(PartDescriptions).all()
+    if len(part_descriptions)==0:
+        return jsonify({"message" : "There is no part description to show."}), 200
+    return part_descriptions_schema.jsonify(part_descriptions), 200
 
+@part_descriptions_bp.route('/search_by_name', methods=['GET'])
+def get_all_descriptions_by_name():
+    name = request.args.get("name")
+    part_descriptions = db.session.query(PartDescriptions).where(PartDescriptions.name.ilike(f"%{name}%")).all()
+    if len(part_descriptions)==0:
+        return jsonify({"message" : "There is no part description to show."}), 200
+    return part_descriptions_schema.jsonify(part_descriptions), 200
 
 
