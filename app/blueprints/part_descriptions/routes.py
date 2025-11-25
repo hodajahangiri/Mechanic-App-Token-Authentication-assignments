@@ -54,5 +54,15 @@ def update_part_description(part_description_id):
     db.session.commit()
     return jsonify({"message" : f"Successfully description with id: {part_description_id} updated."}), 200
 
+@part_descriptions_bp.route('/<int:part_description_id>', methods=['DELETE'])
+def delete_part_description(part_description_id):
+    part_description_to_delete = db.session.get(PartDescriptions,part_description_id)
+    if not part_description_to_delete:
+        return jsonify({"message" : f"Description with id: {part_description_id} not found"}), 404
+    if len(part_description_to_delete.parts)>0:
+        return jsonify({"message" : f"Some parts has relationship with this description, you can not delete it."}), 200
+    db.session.delete(part_description_to_delete)
+    db.session.commit()
+    return jsonify({"message" : f"Successfully deleted description with id: {part_description_id}"}), 200
 
 
