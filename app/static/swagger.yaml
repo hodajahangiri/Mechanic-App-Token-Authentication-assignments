@@ -240,7 +240,7 @@ paths:
                 salary: 4000.99
               token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...."
 
-    get: #Get all mechanics Endpoint
+    get: # Get all mechanics Endpoint
       tags:
         - Mechanics
       summary: "Return all mechanics"
@@ -251,7 +251,7 @@ paths:
           schema:
             $ref: "#/definitions/MechanicsResponse"
     
-    delete: #Deleting a Mechanic
+    delete: # Deleting a Mechanic
       tags:
         - Mechanics
       summary: "Delete a mechanic"
@@ -267,7 +267,7 @@ paths:
                 type: string
                 example: "Successfully deleted mechanic with id: 0"
     
-    put:
+    put: # Update a Mechanic
       tags:
         - Mechanics
       summary: "Update a mechanic"
@@ -291,7 +291,7 @@ paths:
                     type: string
                     example: "Successfully mechanic with id: 0 updated."
 
-  /mechanics/profile:
+  /mechanics/profile: # Get a specific Mechanic
     get: 
       tags:
         - Mechanics
@@ -305,7 +305,7 @@ paths:
           schema:
             $ref: "#definitions/MechanicResponse"
 
-  /mechanics/service_tickets:
+  /mechanics/service_tickets: # Get service_tickets for a mechanic
     get:
       tags:
         - Mechanics
@@ -319,7 +319,7 @@ paths:
           schema:
             $ref: "#/definitions/ServiceTicketsResponse"
 
-  /mechanics/hard_work_mechanic:
+  /mechanics/hard_work_mechanic: # Get the first hard_work mechanic
     get:
       tags:
         - Mechanics
@@ -331,7 +331,7 @@ paths:
           schema:
             $ref : "#/definitions/MechanicResponseWithTickets_num"
     
-  /mechanics/sort_by_work:
+  /mechanics/sort_by_work: # Sort Mechanics by tickets
     get:
       tags:
         - Mechanics
@@ -342,6 +342,264 @@ paths:
           description: "Successful get mechanics sorted list"
           schema:
             $ref : "#/definitions/MechanicsResponseWithTickets_num"
+
+# Service_tickets API documentation
+  /service_tickets:
+
+    post: # Create a Service ticket for a Costumer
+      tags:
+        - Service_Tickets
+      summary: "Create a service ticket"
+      description: "Endpoint to create service ticket for specific customer, token for customer required."
+      security: 
+        - bearerAuth: []
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "create a service ticket "
+          required: true
+          schema:
+            $ref: "#/definitions/ServiceTicketInput"
+      responses:
+        200:
+          description: "Successfully create service_ticket"
+          schema:
+            $ref : "#/definitions/ServiceTicketResponse"
+
+    get: # Get all service tickets
+      tags:
+        - Service_Tickets
+      summary: "Get all service tickets"
+      description: "Endpoint to get all service tickets."
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+          description: "Show service tickets in specific page"
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+          description: "Number of service tickets in page to return"
+      responses:
+        200:
+          description: "Successful Retrieval of Service Tickets"
+          schema:
+            $ref: "#/definitions/ServiceTicketsResponse"
+
+  /service_tickets/{service_ticket_id}:
+
+    get: # GET a specific service_ticket
+      tags:
+        - Service_Tickets
+      summary: "Get a specific service ticket"
+      description: "Endpoint to get a specific service ticket by ID."
+      parameters:
+        - in: path
+          name: service_ticket_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the service ticket to retrieve"
+            example: 1
+      responses:
+        200:
+          description: "Successful Retrieval of Service Ticket"
+          schema:
+            $ref: "#/definitions/ServiceTicketResponse"
+
+    delete: # DELETE a specific service_ticket
+      tags:
+        - Service_Tickets
+      summary: "Delete a specific service ticket"
+      description: "Endpoint to delete a specific service ticket by ID."
+      parameters:
+        - in: path
+          name: service_ticket_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the service ticket to retrieve"
+            example: 1
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Successfully deleted service_ticket with id: 0"
+
+    put: # UPDATE a specific service_ticket
+      tags:
+        - Service_Tickets
+      summary: "Update a specific service ticket"
+      description: "Endpoint to update a specific service ticket by ID."
+      parameters:
+        - in: path
+          name: service_ticket_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the service ticket to retrieve"
+            example: 1
+        - in: "body"
+          name: "body"
+          description: "create a service ticket "
+          required: true
+          schema:
+            $ref: "#/definitions/ServiceTicketInput"
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Successfully service_ticket with id: 0 updated."
+
+  /service_tickets/mechanics/{service_ticket_id}: #GET all mechanics for a specific service_ticket
+    get:
+      tags:
+        - Service_Tickets
+      summary: "Get all mechanics for a specific service ticket"
+      description: "Endpoint to get all mechanics for a specific service ticket by ID."
+      parameters:
+        - in: path
+          name: service_ticket_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the service ticket to retrieve"
+            example: 1
+      responses:
+        200:
+          description: "Successful Retrieval of all mechanics for a Service Ticket"
+          schema:
+            $ref: "#/definitions/MechanicsResponse"
+    
+  /service_tickets/{service_ticket_id}/assign-mechanic/{mechanic_id}: # Add mechanic to service_ticket
+    put:
+      tags:
+        - Service_Tickets
+      summary: "Add a specific mechanic to a specific service ticket"
+      description: "Endpoint to update service_ticket mechanics table and add a specific mechanic to a specific service ticket by ID."
+      parameters:
+        - in: path
+          name: service_ticket_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the service ticket to retrieve"
+            example: 1
+        - in: path
+          name: mechanic_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the mechanic to retrieve"
+            example: 1
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Successfully mechanic with id: 0 added to service_ticket with id:0."
+
+  /service_tickets/{service_ticket_id}/remove-mechanic/{mechanic_id}: # Remove mechanic from service_ticket
+    put:
+      tags:
+        - Service_Tickets
+      summary: "Remove a specific mechanic from a specific service ticket"
+      description: "Endpoint to update service_ticket mechanics table and remove a specific mechanic from a specific service ticket by ID."
+      parameters:
+        - in: path
+          name: service_ticket_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the service ticket to retrieve"
+            example: 1
+        - in: path
+          name: mechanic_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the mechanic to retrieve"
+            example: 1
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Successfully mechanic with id: 0 removed from service_ticket with id: 0."
+
+  /service_tickets/{service_ticket_id}/add_part/{part_id}: # Add part to service_ticket
+    put:
+      tags:
+        - Service_Tickets
+      summary: "Add a specific part to a specific service ticket"
+      description: "Endpoint to update parts table and assign a specific part to a specific service ticket by ID."
+      parameters:
+        - in: path
+          name: service_ticket_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the service ticket to retrieve"
+            example: 1
+        - in: path
+          name: part_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the part to retrieve"
+            example: 1
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Successfully part with id:0 added to service_ticket with id:0."
+
+  /service_tickets/{service_ticket_id}/remove_part/{part_id}: # Remove mechanic from service_ticket
+    put:
+      tags:
+        - Service_Tickets
+      summary: "Remove a specific part from a specific service ticket"
+      description: "Endpoint to update parts table and remove a specific part from a specific service ticket by ID."
+      parameters:
+        - in: path
+          name: service_ticket_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the service ticket to retrieve"
+            example: 1
+        - in: path
+          name: part_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the part to retrieve"
+            example: 1
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Successfully part with id: 0 removed from service_ticket with id:0."
 
 
 
@@ -615,6 +873,37 @@ definitions:
         tickets_count:
           type: integer
 
+  ServiceTicketInput:
+    type: object
+    properties:
+      service_desc:
+        type: string
+        example: "Change Tire"
+      price: 
+        type: number
+        format: float
+        example: 1900.99
+      VIN:
+        type: string
+        example: "5XYZWDLA0FG267935"
+
+    required:
+        - price
+        - VIN
+
+  ServiceTicketResponse:
+    type: object
+    properties:
+      VIN:
+        type: string
+      id:
+        type: integer
+      price: 
+        type: number
+        format: float
+      service_desc:
+        type: string
+      
   ServiceTicketsResponse:
     type: array
     items:
