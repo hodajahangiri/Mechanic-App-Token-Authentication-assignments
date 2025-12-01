@@ -1,0 +1,68 @@
+swagger: "2.0"
+info:
+  title: "Mechanic Shop API"
+  description: "Used to manage the everyday functionalities of a Mechanic Shop"
+  version: "0.0.1"
+
+host: "127.0.0.1:5000"
+schemes:
+  - "http"
+consumes:
+  - "application/json"
+produce:
+  - "application/json"
+
+securityDefinitions: 
+  bearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+
+paths:
+
+  /customers/login:
+    post:
+      tags:
+        - Customers
+      summary: "Login for customer endpoint (generate a token)"
+      description: "Validates customer credentials(email and password), and generate a customer specific token"
+      parameters: 
+        - in: "body"
+          name: "body"
+          description: "Login credentials"
+          required: true
+          schema: 
+            $ref: "#/definitions/LoginCredentials"
+      responses:
+        200:
+          description: "Login Successful"
+          schema:
+            $ref: "#/definitions/LoginResponse"
+          examples: 
+            application/json:
+              message: "Successfully logged in. Welcome Customer"
+              token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...."
+
+definitions: 
+
+  LoginCredentials: #Input data required for login route
+    type: object
+    properties:
+      email: 
+        type: string
+        example: "bobb@gmail.com"
+      password:
+        type: string
+        example: "1234"
+
+    required:
+      - email
+      - password
+  
+  LoginResponse: #Response from /login endpoint
+    type: object
+    properties:
+      message: 
+        type: string
+      token:
+        type: string
