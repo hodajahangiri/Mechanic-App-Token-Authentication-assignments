@@ -20,7 +20,7 @@ securityDefinitions:
 
 paths:
 
-  /customers/login:
+  /customers/login: # Login Customer
     post:
       tags:
         - Customers
@@ -43,6 +43,151 @@ paths:
               message: "Successfully logged in. Welcome Customer"
               token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...."
 
+  /customers:
+    post: # Create a Customer
+      tags:
+        - Customers
+      summary: "Register Customer"
+      description: "Send customer info to create a customer profile that will be stored in the database."
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "New Customer Information"
+          required: true
+          schema: 
+            $ref: "#definitions/CustomerInput"
+      responses:
+        201: 
+          description: "Creation Successful"
+          schema: 
+            $ref: "#definitions/CreateCustomerResponse"
+          examples:
+            application/json:
+              customer_data:
+                address: "Street 1"
+                email: "john@gmail.com"
+                first_name: "John"
+                last_name: "Lee"
+                password: "<encrypted password>"
+                phone: "+14084556597"
+              token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...."
+
+    get: #Get all users Endpoint
+      tags:
+        - Customers
+      summary: "Return all customers"
+      description: "Endpoint to get an array of customer objects"
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+          description: "Show customers in specific page"
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+          description: "Number of customers in page to return"
+      responses:
+        200:
+          description: "Successful Retrieval of Customers"
+          schema:
+            $ref: "#/definitions/CustomersResponse"
+    
+    delete: #Deleting a User
+      tags:
+        - Customers
+      summary: "Delete a customer"
+      description: "Delete a customer requires a token, token will be used to identify customer to delete"
+      security: 
+        - bearerAuth: []
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+    
+    put:
+      tags:
+        - Customers
+      summary: "Update a customer"
+      description: "Update a customer requires a token to identify customer to update"
+      security:
+        - bearerAuth: []
+      parameters:
+          - in: "body"
+            name: "body"
+            description: "Customer Updates"
+            required: true
+            schema:
+              $ref: "#/definitions/CustomerInput"
+      responses:
+        200:
+          description: "Successfully customer updated."
+          schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Successfully customer with id: 0 updated."
+
+  /customers/profile:
+    get: #Get all users Endpoint
+      tags:
+        - Customers
+      summary: "Return customer profile"
+      description: "Endpoint to get customer Information"
+      security: 
+        - bearerAuth: []
+      responses:
+        200:
+          description: "Successfully deleted customer with id: integer"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Successfully deleted customer with id: 0"
+
+  /customers/service_tickets:
+    get:
+      tags:
+        - Customers
+      summary: "Return customer service_tickets"
+      description: "Endpoint to get customer service_tickets, token required"
+      security: 
+        - bearerAuth: []
+      responses:
+        200:
+          description: "Successfully show service_tickets"
+          schema:
+            $ref: "#/definitions/ServiceTicketResponse"
+
+  /customers/search_by_email:
+    get:
+      tags:
+        - Customers
+      summary: "Search customers by email"
+      description: "Endpoint to search customers by email."
+      parameters:
+        - in: query
+          name: email
+          required: true
+          schema:
+            type: string
+            example: "john"
+          description: "Email to search"
+      responses:
+        200:
+          description: "Successful get customers by email"
+          schema:
+            $ref: "#/definitions/CustomersResponse"
+
+
 definitions: 
 
   LoginCredentials: #Input data required for login route
@@ -50,10 +195,10 @@ definitions:
     properties:
       email: 
         type: string
-        example: "bobb@gmail.com"
+        example: "john@gmail.com"
       password:
         type: string
-        example: "1234"
+        example: "12345"
 
     required:
       - email
@@ -65,4 +210,104 @@ definitions:
       message: 
         type: string
       token:
+        type: string
+  
+  CustomerInput:
+    type: object
+    properties:
+      first_name: 
+        type: string
+        example: "John"
+      last_name: 
+        type: string
+        example: "Lee"
+      email: 
+        type: string
+        example: "john@gmail.com"
+      password:
+        type: string
+        example: "12345"
+      phone:
+        type: string
+        example: "+14084556597"
+      address:
+        type: string
+        example: "Street 1"
+
+    required:
+        - first_name
+        - last_name
+        - email
+        - password
+        - phone
+
+  CreateCustomerResponse:
+    type: object
+    properties:
+      customer_data:
+        type: object
+        properties:
+          address:
+            type: string
+          email: 
+            type: string
+          first_name: 
+            type: string
+          last_name: 
+            type: string
+          password:
+            type: string
+          phone:
+            type: string
+      token:
+        type: string
+
+  CustomerResponse:
+    type: object
+    properties:
+      address:
+        type: string
+      email: 
+        type: string
+      first_name: 
+        type: string
+      id:
+        type: integer
+      last_name: 
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+
+  CustomersResponse:
+    type: array
+    items:
+      type: object
+      properties:
+        address:
+          type: string
+        email: 
+          type: string
+        first_name: 
+          type: string
+        id:
+          type: integer
+        last_name: 
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
+
+  ServiceTicketResponse:
+    type: object
+    properties:
+      VIN:
+        type: string
+      id:
+        type: integer
+      price:
+        type: float
+      service_desc:
         type: string

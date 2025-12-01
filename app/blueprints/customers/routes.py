@@ -11,7 +11,7 @@ from sqlalchemy import select
 
 #LOGIN ROUTE
 @customers_bp.route('/login', methods=['POST'])
-@limiter.limit("3 per hour")
+@limiter.limit("30 per hour")
 def login():
     try:
         credential_data = customer_login_schema.load(request.json)
@@ -29,7 +29,7 @@ def login():
         return jsonify({"error message" : "Invalid email or password."}), 400
 
 @customers_bp.route('', methods=["POST"])
-@limiter.limit("3 per hour")
+@limiter.limit("30 per hour")
 def create_customer():
     try:
         data = customer_schema.load(request.json)
