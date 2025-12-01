@@ -125,6 +125,8 @@ def add_part_to_service_ticket(service_ticket_id,part_id):
         return jsonify({"error" : f"Service_ticket with id: {service_ticket_id} not found."}), 404
     if not part:
        return jsonify({"error" : f"Part with id: {part_id} not found."}), 404
+    if part.ticket_id is not None and part.ticket_id != service_ticket_id:
+        return jsonify({"error" : f"Part with id: {part_id} is already used in another service_ticket."}), 404
     if part not in service_ticket.parts:
         service_ticket.parts.append(part)
         db.session.commit()
