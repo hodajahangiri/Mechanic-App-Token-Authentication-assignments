@@ -89,3 +89,16 @@ class TestMechanics(unittest.TestCase):
         self.assertEqual(response.json[0]['email'], "tester@email.com")
         self.assertEqual(response.json[0]['first_name'], "FirstTest")
     
+    def test_read_mechanic(self):
+        headers = {
+            "Authorization" : "Bearer " + self.token
+        }
+        response = self.client.get('/mechanics/profile', headers=headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json['first_name'], "FirstTest")
+        self.assertEqual(response.json['email'], "tester@email.com")
+    
+    def test_unauthorized_ead_mechanic(self):
+        response = self.client.get('/mechanics/profile')
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.json['error'], "token missing from authorization headers") 
