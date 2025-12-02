@@ -43,7 +43,7 @@ def create_mechanic():
     db.session.add(new_mechanic)
     db.session.commit()
     new_mechanic_token = encode_token(new_mechanic.id, "mechanic")
-    response = {"mechanic_data" : data,
+    response = {"mechanic_data" : mechanic_schema.dump(new_mechanic),
                 "token" : new_mechanic_token}
     return jsonify(response), 201
 
