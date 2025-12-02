@@ -448,7 +448,7 @@ paths:
             example: 1
         - in: "body"
           name: "body"
-          description: "create a service ticket "
+          description: "update a service ticket "
           required: true
           schema:
             $ref: "#/definitions/ServiceTicketInput"
@@ -601,7 +601,117 @@ paths:
                 type: string
                 example: "Successfully part with id: 0 removed from service_ticket with id:0."
 
+# Part_descriptions API documentations
+  /part_descriptions:
 
+    post: # Create a part_description
+      tags:
+        - Part_Descriptions
+      summary: "Create a part description"
+      description: "Send part info to create a part description that will be stored in the database"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "New Part Description Information"
+          required: true
+          schema: 
+            $ref: "#definitions/PartDescriptionInput"
+      responses:
+        201: 
+          description: "Creation Successful"
+          schema: 
+            $ref: "#definitions/PartDescriptionResponse"
+          examples:
+            application/json:
+              id: 0
+              made_in: "China"
+              name: "Tire"
+              price: 200.99
+
+    get: # Get all part descriptions
+      tags:
+        - Part_Descriptions
+      summary: "Get all part descriptions"
+      description: "Endpoint to get all part descriptions."
+      responses:
+        200:
+          description: "Successful Retrieval of Part Descriptions"
+          schema:
+            $ref: "#/definitions/PartDescriptionsResponse"
+
+  /part_descriptions/search_by_name: #Search a Part description by name
+    get:
+      tags:
+        - Part_Descriptions
+      summary: "Search part description by name"
+      description: "Endpoint to search parts description by name."
+      parameters:
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+            example: "tire"
+          description: "Part name to search"
+      responses:
+        200:
+          description: "Successful get parts by name"
+          schema:
+            $ref: "#/definitions/PartDescriptionsResponse"
+
+  /part_descriptions/{part_description_id}:
+
+    put: # UPDATE a specific part_description
+      tags:
+        - Part_Descriptions
+      summary: "Update a specific part description"
+      description: "Endpoint to update a specific part description by ID."
+      parameters:
+        - in: path
+          name: part_description_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the part description to retrieve"
+            example: 1
+        - in: "body"
+          name: "body"
+          description: "update a part description"
+          required: true
+          schema:
+            $ref: "#/definitions/PartDescriptionInput"
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Successfully description with id: 0 updated."
+
+    delete: # DELETE a specific part_description
+      tags:
+        - Part_Descriptions
+      summary: "Delete a specific part description"
+      description: "Endpoint to delete a specific part description by ID."
+      parameters:
+        - in: path
+          name: part_description_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the part description to retrieve"
+            example: 1
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Successfully deleted description with id: 0"
+
+    
 
 
 # Define Models for Input and Response
@@ -918,3 +1028,53 @@ definitions:
           format: float
         service_desc:
           type: string
+
+  PartDescriptionInput:
+    type: object
+    properties:
+      name:
+        type: string
+        example: "Battery"
+      price: 
+        type: number
+        format: float
+        example: 1200.99
+      made_in:
+        type: string
+        example: "US"
+
+    required:
+        - name
+        - price
+        - made_in
+
+  PartDescriptionResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      made_in:
+        type: string
+      name:
+        type: string
+      price: 
+        type: number
+        format: float
+
+  PartDescriptionsResponse:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        made_in:
+          type: string
+        name:
+          type: string
+        price: 
+          type: number
+          format: float
+      
+      
+

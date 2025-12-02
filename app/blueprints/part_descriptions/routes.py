@@ -5,9 +5,6 @@ from marshmallow import ValidationError
 from app.models import db, PartDescriptions
 
 
-
-
-
 @part_descriptions_bp.route('', methods=['POST'])
 def create_part_description():
     try:
@@ -34,6 +31,8 @@ def get_all_part_descriptions():
 @part_descriptions_bp.route('/search_by_name', methods=['GET'])
 def get_all_descriptions_by_name():
     name = request.args.get("name")
+    if name is None:
+        return jsonify({"message" : "You have to send the name of part that you want to search."}), 200
     part_descriptions = db.session.query(PartDescriptions).where(PartDescriptions.name.ilike(f"%{name}%")).all()
     if len(part_descriptions)==0:
         return jsonify({"message" : "There is no part description to show."}), 200
