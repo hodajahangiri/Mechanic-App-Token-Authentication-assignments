@@ -146,7 +146,7 @@ class TestMechanics(unittest.TestCase):
             "Authorization" : "Bearer " + self.wrong_token
         }
         mechanic_payload = {
-            "first_name": "FirstTester",
+            "first_name": "FirstTest",
             "last_name": "LastTester",
             "email": "new_test@email.com",
             "password" : "12345",
@@ -179,3 +179,15 @@ class TestMechanics(unittest.TestCase):
         response = self.client.get('/mechanics/service_tickets',headers=headers)
         self.assertEqual(response.status_code, 200)
         
+    def test_get_hard_work_mechanic(self):
+        response = self.client.get('/mechanics/hard_work_mechanic')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('tickets_count',response.json)
+        self.assertEqual(response.json['mechanic']['first_name'],'FirstTest')
+
+    def test_get_sorted_mechanic_list_by_work(self):
+        response = self.client.get('/mechanics/sort_by_work')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('tickets_count',response.json[0])
+        self.assertEqual(response.json[0]['mechanic']['first_name'],'FirstTest')
+    
