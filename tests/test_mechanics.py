@@ -98,7 +98,30 @@ class TestMechanics(unittest.TestCase):
         self.assertEqual(response.json['first_name'], "FirstTest")
         self.assertEqual(response.json['email'], "tester@email.com")
     
-    def test_unauthorized_ead_mechanic(self):
+    def test_unauthorized_read_mechanic(self):
         response = self.client.get('/mechanics/profile')
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.json['error'], "token missing from authorization headers") 
+
+    def test_delete_mechanic(self):
+        headers = {
+            "Authorization" : "Bearer " + self.token
+        }
+        response = self.client.delete('/mechanics', headers=headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json['message'], "Successfully deleted mechanic with id: 1") 
+
+    def test_unauthorized_delete_mechanic(self):
+        response = self.client.delete('/mechanics')
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.json['error'], "token missing from authorization headers") 
+
+    def test_wrong_token_delete_mechanic(self):
+        headers = {
+            "Authorization" : "Bearer " + "123asdasd"
+        }
+        response = self.client.delete('/mechanics', headers=headers)
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.json['message'], "invalid token") 
+
+    
