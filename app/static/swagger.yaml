@@ -711,9 +711,120 @@ paths:
                 type: string
                 example: "Successfully deleted description with id: 0"
 
+# parts API documentations
+  /parts:
+
+    post: # Create a part or parts
+      tags:
+        - Parts
+      summary: "Create a part or parts"
+      description: "Send part info to create a part(s) that will be stored in the database"
+      parameters:
+        - in: query
+          name: "qty"
+          required: false
+          schema:
+            type: integer
+            example: 1
+          description: "Parts Quantity"
+        - in: "body"
+          name: "body"
+          description: "New Part Information"
+          required: true
+          schema: 
+            $ref : "#definitions/PartInput"
+      responses:
+        201: 
+          description: "Creation Successful"
+          schema: 
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Successfully created 1 part(s) with description id: 0."
+
+    get: # Get all parts
+      tags:
+        - Parts
+      summary: "Get all parts"
+      description: "Endpoint to get all parts."
+      responses:
+        200:
+          description: "Successful Retrieval of Parts"
+          schema:
+            $ref: "#/definitions/PartsResponse"
+
+  /parts/{part_id}:
+
+    get: # Get a specific part
+      tags:
+        - Parts
+      summary: "Get a specific part"
+      description: "Endpoint to get a specific part by ID."
+      parameters:
+        - in: path
+          name: part_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the part to retrieve"
+            example: 1
+      responses:
+        200:
+          schema:
+            $ref : "#definitions/PartResponse"
+
+    put: # UPDATE a specific part
+      tags:
+        - Parts
+      summary: "Update a specific part."
+      description: "Endpoint to update a specific part by ID."
+      parameters:
+        - in: path
+          name: part_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the part to retrieve"
+            example: 1
+        - in: "body"
+          name: "body"
+          description: "update a part."
+          required: true
+          schema:
+            $ref: "#/definitions/PartInput"
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Successfully part with id: 0 updated."
+
+    delete: # DELETE a specific part
+      tags:
+        - Parts
+      summary: "Delete a specific part "
+      description: "Endpoint to delete a specific part by ID."
+      parameters:
+        - in: path
+          name: part_id
+          schema:
+            type: integer
+            required: true
+            description: "Numeric ID of the part to retrieve"
+            example: 1
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Successfully deleted part with id: 0"
+
     
-
-
 # Define Models for Input and Response
 definitions: 
 
@@ -1076,5 +1187,52 @@ definitions:
           type: number
           format: float
       
-      
+  PartInput:
+    type: object
+    properties:
+      serial_number:
+        type: string
+        example: "BATTERY351"
+      desc_id: 
+        type: integer
+        example: 1
+
+    required:
+        - serial_number
+        - desc_id
+
+  PartResponse:
+    type: object
+    properties:
+      desc_id:
+        type: integer
+      id:
+        type: integer
+      serial_number:
+        type: string
+      ticket_id:
+        type: integer
+
+  PartsResponse:
+    type: array
+    items:
+      type: object
+      properties:
+        part:
+          type: object
+          properties:
+            desc_id:
+              type: integer
+            id:
+              type: integer
+            serial_number:
+              type: string
+            ticket_id:
+              type: integer
+        part_name:
+          type: string
+        part_price:
+          type: number
+          format: float
+
 

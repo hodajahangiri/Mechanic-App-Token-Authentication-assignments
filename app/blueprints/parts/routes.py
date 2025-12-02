@@ -12,7 +12,9 @@ def create_part():
         data = part_schema.load(request.json)
     except ValidationError as e:
         return jsonify({"error": e.messages}), 400
-    quantity = request.args.get('gty', 1, type=int)
+    quantity = request.args.get('qty', 1, type=int)
+    if quantity <= 0:
+        return jsonify({"error": "qty can not be 0 or negative"}), 400
     count = 0
     base_serial = data["serial_number"]
     new_serial = base_serial
@@ -26,7 +28,7 @@ def create_part():
         db.session.add(new_part)
         count += 1
     db.session.commit()
-    return jsonify(f"Successfully created {quantity} part(s) with description id: {data["desc_id"]}(s)."), 200
+    return jsonify({"message": f"Successfully created {quantity} part(s) with description id: {data["desc_id"]}."}), 200
 
 
 def check_existing_serial_number(serial_number):
