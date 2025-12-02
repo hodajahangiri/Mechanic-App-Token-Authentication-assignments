@@ -74,7 +74,7 @@ class TestMechanics(unittest.TestCase):
         self.assertIn("token", response.json)
     
     # Negative check
-    def test_invalid_email_or_pass(self):
+    def test_invalid_email_or_pass_login(self):
         login_credentials = { 
             "email": "tester@email.com",
             "password": "12345"
@@ -83,5 +83,9 @@ class TestMechanics(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json["error message"], "Invalid email or password.")
 
-
+    def test_read_mechanics(self):
+        response = self.client.get('/mechanics')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json[0]['email'], "tester@email.com")
+        self.assertEqual(response.json[0]['first_name'], "FirstTest")
     
