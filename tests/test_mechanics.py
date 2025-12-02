@@ -172,4 +172,10 @@ class TestMechanics(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn('first_name', response.json['error message'])
 
-    
+    def test_read_mechanic_service_tickets(self):
+        headers = {
+            "Authorization" : "Bearer " + self.token
+        }
+        response = self.client.get('/mechanics/service_tickets',headers=headers)
+        self.assertEqual(response.status_code, 200)
+        
