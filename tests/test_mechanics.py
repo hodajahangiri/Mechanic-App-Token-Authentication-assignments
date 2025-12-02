@@ -16,6 +16,7 @@ class TestMechanics(unittest.TestCase):
             db.session.add(self.mechanic)
             db.session.commit()
         self.token = encode_token(1, "mechanic") #encoding a token for my starter designed mechanic 
+        self.wrong_token = encode_token(1, "customer")
         self.client = self.app.test_client() #creates a test client that will send requests to our API
     
     def test_create_mechanic(self):
@@ -116,12 +117,59 @@ class TestMechanics(unittest.TestCase):
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.json['error'], "token missing from authorization headers") 
 
-    def test_wrong_token_delete_mechanic(self):
+    def test_invalid_token_delete_mechanic(self):
         headers = {
             "Authorization" : "Bearer " + "123asdasd"
         }
         response = self.client.delete('/mechanics', headers=headers)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.json['message'], "invalid token") 
+
+    def test_update_mechanic(self):
+        headers = {
+            "Authorization" : "Bearer " + self.token
+        }
+        mechanic_payload = {
+            "first_name": "FirstTester",
+            "last_name": "LastTester",
+            "email": "new_test@email.com",
+            "password" : "12345",
+            "phone": "+14082222222",
+            "salary" : 4500.99
+        }
+        response = self.client.put('/mechanics', headers=headers, json=mechanic_payload)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json['message'], "Successfully mechanic with id: 1 updated.")
+
+    def test_wrong_token_update_mechanic(self):
+        headers = {
+            "Authorization" : "Bearer " + self.wrong_token
+        }
+        mechanic_payload = {
+            "first_name": "FirstTester",
+            "last_name": "LastTester",
+            "email": "new_test@email.com",
+            "password" : "12345",
+            "phone": "+14082222222",
+            "salary" : 4500.99
+        }
+        response = self.client.put('/mechanics', headers=headers, json=mechanic_payload)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['message'], "customer is not allowed.")
+    
+    def test_invalid_data_update_mechanic(self):
+        headers = {
+            "Authorization" : "Bearer " + self.token
+        }
+        mechanic_payload = {
+            "last_name": "LastTester",
+            "email": "new_test@email.com",
+            "password" : "12345",
+            "phone": "+14082222222",
+            "salary" : 4500.99
+        }
+        response = self.client.put('/mechanics', headers=headers, json=mechanic_payload)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('first_name', response.json['error message'])
 
     
