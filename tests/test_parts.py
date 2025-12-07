@@ -20,7 +20,6 @@ class TestParts(unittest.TestCase):
         self.part_desc_id = part_desc_id
         self.part_id = part_id
         self.client = self.app.test_client()
-        self.client = self.app.test_client()
 
     def test_create_part(self):
         part_payload = {
