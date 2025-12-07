@@ -5,7 +5,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.utils.auth import encode_token
 
 class TestCustomers(unittest.TestCase):
-
     #Runs before each test_method
     def setUp(self):
         self.app = create_app('TestingConfig') #Create a testing version of my app for these testcases
