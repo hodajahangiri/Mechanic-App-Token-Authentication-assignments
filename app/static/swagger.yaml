@@ -4,7 +4,7 @@ info:
   description: "Used to manage the everyday functionalities of a Mechanic Shop"
   version: "0.0.1"
 
-host: "mechanic-app-token-authentication.onrender.com"
+host: "mechanic-app-r9ih.onrender.com"
 schemes:
   - "https"
 consumes:
