@@ -198,7 +198,7 @@ paths:
           description: "Login credentials"
           required: true
           schema: 
-            $ref: "#/definitions/LoginCredentials"
+            $ref: "#/definitions/LoginMechanicCredentials"
       responses:
         200:
           description: "Login Successful"
@@ -839,6 +839,20 @@ paths:
 definitions: 
 
   LoginCredentials: #Input data required for login route
+    type: object
+    properties:
+      email: 
+        type: string
+        example: "john@gmail.com"
+      password:
+        type: string
+        example: "12345"
+
+    required:
+      - email
+      - password
+
+  LoginMechanicCredentials: #Input data required for login route
     type: object
     properties:
       email: 
