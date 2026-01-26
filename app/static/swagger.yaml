@@ -857,7 +857,7 @@ definitions:
     properties:
       email: 
         type: string
-        example: "john@gmail.com"
+        example: "sam@gmail.com"
       password:
         type: string
         example: "12345"
