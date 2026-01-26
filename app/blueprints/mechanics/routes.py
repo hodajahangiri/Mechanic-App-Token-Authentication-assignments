@@ -21,6 +21,7 @@ def login():
         customer_token = encode_token(mechanic.id, "mechanic")
         response = {
             "message" : f"Successfully logged in. Welcome {mechanic.first_name}",
+            "mechanic_data" : mechanic_schema.dump(mechanic),
             "token" : customer_token
         }
         return jsonify(response)

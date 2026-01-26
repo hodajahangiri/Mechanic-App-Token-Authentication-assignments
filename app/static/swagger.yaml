@@ -207,6 +207,15 @@ paths:
           examples: 
             application/json:
               message: "Successfully logged in. Welcome Mechanic"
+              mechanic_data:
+                address: "Street 5"
+                email: "sam@gmail.com"
+                first_name: "Sam"
+                id: 0
+                last_name: "Java"
+                password: "<encrypted password>"
+                phone: "+14082222222"
+                salary: 4000.99
               token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...."
 
   /mechanics:
