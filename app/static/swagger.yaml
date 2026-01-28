@@ -294,12 +294,20 @@ paths:
       responses:
         200:
           description: "Successfully mechanic updated."
-          schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Successfully mechanic with id: 0 updated."
+          schema: 
+            $ref: "#definitions/UpdateMechanicResponse"
+          examples:
+            application/json:
+              mechanic_data:
+                address: "Street 5"
+                email: "sam@gmail.com"
+                first_name: "Sam"
+                id: 0
+                last_name: "Java"
+                password: "<encrypted password>"
+                phone: "+14082222222"
+                salary: 4000.99
+              message: "Successfully mechanic with id: 0 updated."
 
   /mechanics/profile: # Get a specific Mechanic
     get: 
@@ -1020,6 +1028,32 @@ definitions:
             type: number
             format: float
       token:
+        type: string
+
+  UpdateMechanicResponse:
+    type: object
+    properties:
+      mechanic_data:
+        type: object
+        properties:
+          address:
+            type: string
+          email: 
+            type: string
+          first_name: 
+            type: string
+          id:
+            type: integer
+          last_name: 
+            type: string
+          password:
+            type: string
+          phone:
+            type: string
+          salary:
+            type: number
+            format: float
+      message:
         type: string
 
   MechanicResponse:
