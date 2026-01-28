@@ -105,7 +105,11 @@ def update_mechanic():
         for key, value in mechanic_data.items():
             setattr(mechanic, key, value)
         db.session.commit()
-        return jsonify({"message" : f"Successfully mechanic with id: {mechanic_id} updated."}), 200
+        response = {
+            "message" : f"Successfully mechanic with id: {mechanic_id} updated.",
+            "mechanic_data" : mechanic_schema.dump(mechanic),
+        }
+        return jsonify(response), 200
     else:
         return jsonify({"message" : f"{user_role} is not allowed."}), 400
     
